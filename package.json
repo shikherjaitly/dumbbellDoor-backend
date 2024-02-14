@@ -1,0 +1,27 @@
+{
+  "name": "dumbbelldoor-backend",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "type": "module",
+  "directories": {
+    "test": "test"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/shikherjaitly/DumbbellDoor-backend.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/shikherjaitly/DumbbellDoor-backend/issues"
+  },
+  "homepage": "https://github.com/shikherjaitly/DumbbellDoor-backend#readme",
+  "dependencies": {
+    "express": "^4.18.2"
+  }
+}
