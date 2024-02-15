@@ -27,6 +27,17 @@ const signUp = async (req, res) => {
 
   // check if a document already exists under the same email
 
+  const existingCustomer = await Customer.findOne({ email });
+  const existingTrainer = await Trainer.findOne({ email });
+
+  if (existingCustomer || existingTrainer) {
+    return errorHandler(
+      res,
+      400,
+      "Email is already registered, please try with a different account!"
+    );
+  }
+
   try {
     if (role === "customer") {
       await Customer.create({ email, password }).then(() => {
