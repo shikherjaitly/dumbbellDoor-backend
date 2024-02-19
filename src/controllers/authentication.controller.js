@@ -19,10 +19,12 @@ const signup = async (req, res) => {
   }
 
   const isEmailValid = async () => {
-    return emailValidator.validate(email);
+    return emailValidator.validate({ email, validateSMTP: false });
   };
 
   const response = await isEmailValid();
+
+  console.log(response);
 
   if (!response.valid) {
     return errorHandler(res, 400, "Please provide a valid email address!");
