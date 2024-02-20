@@ -19,10 +19,11 @@ const signup = async (req, res) => {
   }
 
   const isEmailValid = async () => {
-    return emailValidator.validate(email);
+    return await emailValidator.validate({ email, validateSMTP: false });
   };
 
   const response = await isEmailValid();
+  console.log(response);
 
   if (!response.valid) {
     return errorHandler(res, 400, "Please provide a valid email address!");
@@ -62,7 +63,7 @@ const login = async (req, res) => {
     return errorHandler(res, 406, "Email & password are mandatory!");
   }
   const isEmailValid = async () => {
-    return emailValidator.validate(email);
+    return await emailValidator.validate({ email, validateSMTP: false });
   };
 
   const response = await isEmailValid();
