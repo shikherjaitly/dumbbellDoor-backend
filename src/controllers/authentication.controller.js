@@ -19,7 +19,7 @@ const signup = async (req, res) => {
   }
 
   const isEmailValid = async () => {
-    return emailValidator.validate(email);
+    return await emailValidator.validate({ email, validateSMTP: false });
   };
 
   const response = await isEmailValid();
@@ -62,7 +62,7 @@ const login = async (req, res) => {
     return errorHandler(res, 406, "Email & password are mandatory!");
   }
   const isEmailValid = async () => {
-    return emailValidator.validate(email);
+    return await emailValidator.validate({ email, validateSMTP: false });
   };
 
   const response = await isEmailValid();
