@@ -6,6 +6,7 @@ const trainerSchema = new mongoose.Schema(
     name: { type: String },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
+    gender: { type: String },
     profilePicture: { type: String },
     description: { type: String },
     yearsOfExperience: { type: String },
