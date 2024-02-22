@@ -71,4 +71,20 @@ const buildTrainerProfile = async (req, res) => {
   }
 };
 
-export { buildTrainerProfile };
+const getTrainers = async (req, res) => {
+  try {
+    const trainers = await Trainer.find({});
+    if (trainers.length === 0) {
+      return errorHandler(res, 500, "No trainers found!");
+    }
+    return responseHandler(res, 200, trainers);
+  } catch (error) {
+    return errorHandler(
+      res,
+      500,
+      "Error fetching trainers data, please try after sometime!"
+    );
+  }
+};
+
+export { buildTrainerProfile, getTrainers };

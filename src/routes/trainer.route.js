@@ -1,5 +1,8 @@
 import express from "express";
-import { buildTrainerProfile } from "../controllers/trainer.controller.js";
+import {
+  buildTrainerProfile,
+  getTrainers,
+} from "../controllers/trainer.controller.js";
 import multer from "multer";
 const upload = multer({ dest: "uploads/" });
 
@@ -10,5 +13,7 @@ router.patch(
   upload.single("profilePicture"),
   buildTrainerProfile
 );
+
+router.get("/getTrainers", getTrainers);
 
 export default router;
