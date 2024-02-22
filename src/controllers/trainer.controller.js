@@ -7,6 +7,7 @@ const buildTrainerProfile = async (req, res) => {
   const {
     name,
     email,
+    gender,
     description,
     yearsOfExperience,
     certifications,
@@ -23,6 +24,7 @@ const buildTrainerProfile = async (req, res) => {
   if (
     !(
       name &&
+      gender &&
       profilePicture &&
       description &&
       yearsOfExperience &&
@@ -49,6 +51,7 @@ const buildTrainerProfile = async (req, res) => {
       },
       {
         name,
+        gender,
         profilePicture: profilePicturePath,
         description,
         yearsOfExperience,
