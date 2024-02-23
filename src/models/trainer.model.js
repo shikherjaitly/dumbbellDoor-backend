@@ -13,13 +13,16 @@ const trainerSchema = new mongoose.Schema(
     certifications: [{ type: String }],
     specializations: [{ type: String }],
     typesOfServices: [{ type: String }],
-    availability: {
-      days: [{ type: String }],
-      startTime: { type: String },
-      endTime: { type: String },
-    },
+    availability: [
+      {
+        day: { type: String, required: true },
+        time: [{ type: String }],
+      },
+    ],
     location: { type: String },
     phoneNumber: { type: String },
+    instagram: { type: String },
+    facebook: { type: String },
     testimonials: [
       {
         customerId: { type: mongoose.Schema.Types.ObjectId, ref: "Customer" },
