@@ -7,6 +7,7 @@ import responseHandler from "../utils/responseHandler.js";
 import { Customer } from "../models/customer.model.js";
 import { Trainer } from "../models/trainer.model.js";
 import { Session } from "../models/session.model.js";
+import verifier from "email-verify";
 
 dotenv.config({
   path: "./.env",
@@ -18,42 +19,33 @@ const signup = async (req, res) => {
     return errorHandler(res, 406, "All fields are mandatory!");
   }
 
-  const isEmailValid = async () => {
-    return await emailValidator.validate({ email, validateSMTP: false });
-  };
-
-  const response = await isEmailValid();
-
-  if (!response.valid) {
-    return errorHandler(res, 400, "Please provide a valid email address!");
-  }
-
-  // check if a document already exists under the same email
-
-  const existingCustomer = await Customer.findOne({ email });
-  const existingTrainer = await Trainer.findOne({ email });
-
-  if (existingCustomer || existingTrainer) {
-    return errorHandler(
-      res,
-      400,
-      "Email is already registered, please try with a different account!"
-    );
-  }
-
-  try {
-    if (role === "customer") {
-      await Customer.create({ email, password }).then(() => {
-        return responseHandler(res, 200, "Signup successful!");
-      });
-    } else {
-      await Trainer.create({ email, password }).then(() => {
-        return responseHandler(res, 200, "Signup successful!");
-      });
+  verifier.verify(email, async (err, info) => {
+    if (err) {
+      return errorHandler(res, 500, err);
     }
-  } catch (error) {
-    return errorHandler(res, 400, "An error occurred: " + error);
-  }
+    if (!info.success) {
+      return errorHandler(res, 400, "Please provide a valid email address!");
+    }
+
+    try {
+      const existingCustomer = await Customer.findOne({ email });
+      const existingTrainer = await Trainer.findOne({ email });
+
+      if (existingCustomer || existingTrainer) {
+        return errorHandler(
+          res,
+          400,
+          "Email is already registered, please try with a different account!"
+        );
+      }
+
+      const user = role === "customer" ? Customer : Trainer;
+      await user.create({ email, password });
+      return responseHandler(res, 200, "Signup successful!");
+    } catch (error) {
+      return errorHandler(res, 400, "An error occurred: " + error);
+    }
+  });
 };
 
 const login = async (req, res) => {
@@ -61,35 +53,31 @@ const login = async (req, res) => {
   if (!(email && password)) {
     return errorHandler(res, 406, "Email & password are mandatory!");
   }
-  const isEmailValid = async () => {
-    return await emailValidator.validate({ email, validateSMTP: false });
-  };
 
-  const response = await isEmailValid();
+  verifier.verify(email, async (err, info) => {
+    if (err) {
+      return errorHandler(res, 500, err);
+    }
+    if (!info.success) {
+      return errorHandler(res, 400, "Please provide a valid email address!");
+    }
 
-  if (!response.valid) {
-    return errorHandler(res, 400, "Please provide a valid email address!");
-  }
+    const isActiveUser = await Session.findOne({ email });
+    if (isActiveUser) {
+      return errorHandler(
+        res,
+        400,
+        "You're already logged in, kindly continue with the session!"
+      );
+    }
 
-  const isActiveUser = await Session.findOne({ email });
-  if (isActiveUser) {
-    return errorHandler(
-      res,
-      400,
-      "You're already logged in, kindly continue with the session!"
-    );
-  }
+    const user =
+      (await Customer.findOne({ email })) || (await Trainer.findOne({ email }));
+    if (!user) {
+      return errorHandler(res, 400, `User is not registered!`);
+    }
 
-  const registeredCustomer = await Customer.findOne({ email });
-  const registeredTrainer = await Trainer.findOne({ email });
-
-  if (!registeredCustomer && !registeredTrainer) {
-    return errorHandler(res, 400, `User is not registered!`);
-  }
-
-  const login = async (userType, registeredUser, res) => {
-    const validUser = await bcrypt.compare(password, registeredUser.password);
-
+    const validUser = await bcrypt.compare(password, user.password);
     if (validUser) {
       jwt.sign(
         { email, password },
@@ -107,29 +95,7 @@ const login = async (req, res) => {
     } else {
       return errorHandler(res, 404, "Invalid credentials!");
     }
-  };
-
-  const customerLogin = async () => {
-    await login("customer", registeredCustomer, res);
-  };
-
-  const trainerLogin = async () => {
-    await login("trainer", registeredTrainer, res);
-  };
-
-  try {
-    if (registeredCustomer) {
-      customerLogin();
-    } else {
-      trainerLogin();
-    }
-  } catch {
-    return errorHandler(
-      res,
-      400,
-      "An error occurred, please try logging in again!"
-    );
-  }
+  });
 };
 
 export { signup, login };
