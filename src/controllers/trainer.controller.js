@@ -17,8 +17,6 @@ const buildTrainerProfile = async (req, res) => {
     location,
     phoneNumber,
     testimonials,
-    instagram,
-    facebook,
   } = req.body;
 
   const profilePicture = req.file?.path;
@@ -33,7 +31,6 @@ const buildTrainerProfile = async (req, res) => {
       certifications &&
       specializations &&
       typesOfServices &&
-      availability &&
       location &&
       phoneNumber
     )
@@ -65,8 +62,6 @@ const buildTrainerProfile = async (req, res) => {
         location,
         phoneNumber,
         testimonials,
-        instagram,
-        facebook,
       }
     ).then(() => {
       return responseHandler(res, 200, "Profile completed!");

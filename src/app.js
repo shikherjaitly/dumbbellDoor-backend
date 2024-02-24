@@ -12,8 +12,12 @@ app.use(cors());
 app.use("/api/auth", userRouter);
 app.use("/api/trainer", trainerRouter);
 
+app.use("/api/trainer", trainerRouter);
+
 app.use("*", (req, res) => {
   errorHandler(res, 404, "Oops...something went wrong!");
 });
+
+
 
 export { app };

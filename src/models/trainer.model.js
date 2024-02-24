@@ -15,8 +15,13 @@ const trainerSchema = new mongoose.Schema(
     typesOfServices: [{ type: String }],
     availability: [
       {
-        day: { type: String, required: true },
-        time: [{ type: String }],
+        day: { type: String },
+        timeSlots: [
+          {
+            startTime: { type: Number, min: 0, max: 24 },
+            endTime: { type: Number, min: 0, max: 24 },
+          },
+        ],
       },
     ],
     location: { type: String },
