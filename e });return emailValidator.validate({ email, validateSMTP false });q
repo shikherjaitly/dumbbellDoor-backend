@@ -1,0 +1,71 @@
+[33mcommit d35d38c04ebd917d71dc79487787b2322a2162d3[m[33m ([m[1;36mHEAD -> [m[1;32mmain[m[33m)[m
+Author: shikher Jaitly <SHIKHER.JAITLY@GMAIL.COM>
+Date:   Tue Feb 20 19:22:06 2024 +0530
+
+    changed smtp
+
+[33mcommit ea2caa09b4dd2c6d7809d2d9b5b5a5c60af6af80[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Merge: 7092b91 76bbc10
+Author: shikher Jaitly <40904466+shikherjaitly@users.noreply.github.com>
+Date:   Thu Feb 15 22:39:44 2024 +0530
+
+    Merge pull request #4 from shikherjaitly/login-signup-controller
+    
+    Login signup controller
+
+[33mcommit 76bbc103210183b484eada36fa04256f7ef07bc7[m
+Author: gurudattpuranik25 <gurudattpuranik35@gmail.com>
+Date:   Thu Feb 15 14:44:44 2024 +0530
+
+    completed login-signup logic
+
+[33mcommit e073d8a521429ba3c2fd0ba2c58780e5ad5b2fb0[m
+Author: gurudattpuranik25 <gurudattpuranik35@gmail.com>
+Date:   Thu Feb 15 11:18:57 2024 +0530
+
+    check duplicate records
+
+[33mcommit e9e1117cd588c7942872248a4fc5f3970c701c23[m
+Author: gurudattpuranik25 <gurudattpuranik35@gmail.com>
+Date:   Thu Feb 15 10:57:12 2024 +0530
+
+    configured mongodb and added basic signup functionality
+
+[33mcommit 878d09f22c71fe348dde4e04e74aba6124ce1770[m
+Author: gurudattpuranik25 <gurudattpuranik35@gmail.com>
+Date:   Thu Feb 15 00:36:07 2024 +0530
+
+    added signup logic
+
+[33mcommit 7092b91558eaca26ce5886168cae3cdb27f18bea[m
+Merge: b8405d1 894eb61
+Author: shikher Jaitly <40904466+shikherjaitly@users.noreply.github.com>
+Date:   Wed Feb 14 22:31:56 2024 +0530
+
+    Merge pull request #2 from shikherjaitly/creating-folder-structure
+    
+    Creating folder structure
+
+[33mcommit 894eb611004e970fcf340cc0b488350c6b6ddce2[m[33m ([m[1;31morigin/creating-folder-structure[m[33m, [m[1;32mcreating-folder-structure[m[33m)[m
+Author: shikher Jaitly <SHIKHER.JAITLY@GMAIL.COM>
+Date:   Wed Feb 14 22:22:15 2024 +0530
+
+    created folder structure
+
+[33mcommit 46219a40d625bae9d48159eb8007992624cb4fe2[m
+Author: shikher Jaitly <SHIKHER.JAITLY@GMAIL.COM>
+Date:   Wed Feb 14 22:07:31 2024 +0530
+
+    created the folder structure
+
+[33mcommit 71874e581920b7e0839a2023d2fef6646d932834[m
+Author: shikher Jaitly <SHIKHER.JAITLY@GMAIL.COM>
+Date:   Wed Feb 14 22:06:54 2024 +0530
+
+    created the folder structure
+
+[33mcommit b8405d166a080e7dd750bef1975b0cc2759ae423[m
+Author: shikher Jaitly <40904466+shikherjaitly@users.noreply.github.com>
+Date:   Wed Feb 14 20:04:57 2024 +0530
+
+    Initial commit
