@@ -6,15 +6,29 @@ const trainerSchema = new mongoose.Schema(
     name: { type: String },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
+    gender: { type: String },
+    profilePicture: { type: String },
+    description: { type: String },
+    yearsOfExperience: { type: String },
     certifications: [{ type: String }],
-    specialties: [{ type: String }],
-    availability: {
-      days: [{ type: String }],
-      startTime: { type: String },
-      endTime: { type: String },
-    },
-    rating: { type: Number, default: 0 },
-    reviews: [
+    specializations: [{ type: String }],
+    typesOfServices: [{ type: String }],
+    availability: [
+      {
+        day: { type: String },
+        timeSlots: [
+          {
+            startTime: { type: Number, min: 0, max: 24 },
+            endTime: { type: Number, min: 0, max: 24 },
+          },
+        ],
+      },
+    ],
+    location: { type: String },
+    phoneNumber: { type: String },
+    instagram: { type: String },
+    facebook: { type: String },
+    testimonials: [
       {
         customerId: { type: mongoose.Schema.Types.ObjectId, ref: "Customer" },
         rating: { type: Number },
