@@ -3,6 +3,8 @@ import cors from "cors";
 import errorHandler from "./utils/errorHandler.js";
 import userRouter from "../src/routes/user.route.js";
 import trainerRouter from "../src/routes/trainer.route.js";
+import bookingRouter from "../src/routes/booking.route.js";
+
 
 const app = express();
 
@@ -14,6 +16,8 @@ app.use("/api/trainer", trainerRouter);
 
 app.use("/api/trainer", trainerRouter);
 
+app.use("/api/bookings", bookingRouter);
+
 app.use("*", (req, res) => {
   errorHandler(res, 404, "Oops...something went wrong!");
 });
@@ -21,3 +25,4 @@ app.use("*", (req, res) => {
 
 
 export { app };
+//tested

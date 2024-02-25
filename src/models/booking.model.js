@@ -1,11 +1,4 @@
-/* Tasks 
-    -- define schema for the bookings section
-    -- booking id: 22-02-24:{
-	   customer name:,
-	   time_slots:[11-12,13-14],
-    
-}
-*/
+//tested
 
 import mongoose from "mongoose";
 
@@ -34,4 +27,4 @@ const bookingSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-export const bookings = mongoose.model("Bookings", bookingsSchema);
+export const Booking = mongoose.model("Booking", bookingSchema);
