@@ -1,11 +1,4 @@
-/* Tasks 
-    -- define schema for the bookings section
-    -- booking id: 22-02-24:{
-	   customer name:,
-	   time_slots:[11-12,13-14],
-    
-}
-*/
+//tested
 
 import mongoose from "mongoose";
 
