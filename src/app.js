@@ -12,6 +12,7 @@ app.use(express.json());
 app.use(cors());
 
 app.use("/api/auth", userRouter);
+app.use("/api/trainer", trainerRouter);
 
 app.use("/api/trainer", trainerRouter);
 
