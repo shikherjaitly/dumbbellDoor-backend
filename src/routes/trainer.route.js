@@ -16,6 +16,4 @@ router.patch(
 
 router.get("/getTrainers", getTrainers);
 
-
 export default router;
-
