@@ -1,6 +1,7 @@
 import express from "express";
 import {
   buildTrainerProfile,
+  fetchTrainerDetails,
   getTrainers,
 } from "../controllers/trainer.controller.js";
 import multer from "multer";
@@ -15,5 +16,7 @@ router.patch(
 );
 
 router.get("/getTrainers", getTrainers);
+
+router.get(`/fetchTrainerDetails/:_id`, fetchTrainerDetails);
 
 export default router;
