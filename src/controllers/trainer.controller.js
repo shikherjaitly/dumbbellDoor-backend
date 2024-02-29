@@ -91,7 +91,6 @@ const fetchTrainerDetails = async (req, res) => {
   const { _id } = req.params;
   try {
     const trainerDetails = await Trainer.findOne({ _id });
-    console.log(trainerDetails);
     return responseHandler(res, 200, trainerDetails);
   } catch (error) {
     errorHandler(res, 500, "Error fetching trainer details!");
