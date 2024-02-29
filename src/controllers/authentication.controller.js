@@ -169,13 +169,32 @@ const resetPassword = async (req, res) => {
       return errorHandler(res, 400, "Invalid or expired token");
     }
 
-    // Reset the password for the user associated with the token
-    // You should implement your own logic to update the user's password
-    console.log(newPassword);
+
+    let updatedUser;
+    if (await Trainer.exists({ email: tokenDocument.email })) {
+      updatedUser = await Trainer.findOneAndUpdate(
+        { email: tokenDocument.email },
+        { password: newPassword }
+      );
+    } else if (await Customer.exists({ email: tokenDocument.email })) {
+      updatedUser = await Customer.findOneAndUpdate(
+        { email: tokenDocument.email },
+        { password: newPassword }
+      );
+    }
 
     // Delete the token from MongoDB after password reset
     await ForgotPassword.deleteOne({ token });
-    return responseHandler(res, 200, "Password reset successfully");
+
+    if (updatedUser) {
+      return responseHandler(res, 200, "Password reset successfully");
+    } else {
+      return errorHandler(
+        res,
+        400,
+        "User not found or email not associated with any collection"
+      );
+    }
   } catch (error) {
     console.error(error);
     return errorHandler(res, 500, "Error resetting password");
