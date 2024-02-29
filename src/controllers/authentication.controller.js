@@ -160,7 +160,7 @@ const forgotPassword = async (req, res) => {
 const resetPassword = async (req, res) => {
   const { token } = req.params;
   const { newPassword } = req.body;
-
+  const  hashedNewPassword = await bcrypt.hash(newPassword,8);
   try {
     // Find the token in MongoDB
     const tokenDocument = await ForgotPassword.findOne({ token });
@@ -174,12 +174,12 @@ const resetPassword = async (req, res) => {
     if (await Trainer.exists({ email: tokenDocument.email })) {
       updatedUser = await Trainer.findOneAndUpdate(
         { email: tokenDocument.email },
-        { password: newPassword }
+        { password: hashedNewPassword },
       );
     } else if (await Customer.exists({ email: tokenDocument.email })) {
       updatedUser = await Customer.findOneAndUpdate(
         { email: tokenDocument.email },
-        { password: newPassword }
+        { password: hashedNewPassword }
       );
     }
 
