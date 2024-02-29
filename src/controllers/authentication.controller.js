@@ -119,11 +119,6 @@ const forgotPassword = async (req, res) => {
 
     // Send an email with the reset link
     const transporter = nodemailer.createTransport({
-      // service: "Gmail",
-      // auth: {
-      //   user: "dumbbelldoor.service@gmail.com",
-      //   pass: "logiclegends",
-      // },
       host: "smtp.gmail.com",
       port: 587,
       secure: false,
