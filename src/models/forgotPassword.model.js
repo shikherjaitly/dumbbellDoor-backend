@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const sessionSchema = mongoose.Schema(
+const forgotPasswordSchema = mongoose.Schema(
   {
     email: {
       type: String,
@@ -8,11 +8,14 @@ const sessionSchema = mongoose.Schema(
       lowercase: true,
       trim: true,
     },
-    accessToken: {
+    token: {
       type: String,
     },
   },
   { timestamps: true }
 );
 
-export const Session = mongoose.model("Session", sessionSchema);
+export const ForgotPassword = mongoose.model(
+  "ForgotPassword",
+  forgotPasswordSchema
+);

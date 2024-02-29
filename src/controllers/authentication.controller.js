@@ -2,11 +2,14 @@ import emailValidator from "deep-email-validator";
 import dotenv from "dotenv";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import nodemailer from "nodemailer";
+import crypto from "crypto";
 import errorHandler from "../utils/errorHandler.js";
 import responseHandler from "../utils/responseHandler.js";
 import { Customer } from "../models/customer.model.js";
 import { Trainer } from "../models/trainer.model.js";
 import { Session } from "../models/session.model.js";
+import { ForgotPassword } from "../models/forgotPassword.model.js";
 
 dotenv.config({
   path: "./.env",
@@ -95,7 +98,7 @@ const login = async (req, res) => {
         return res.status(200).json({
           success: true,
           message: "Login successful!",
-          responseData: { accessToken: token, userDetails: user }
+          responseData: { accessToken: token, userDetails: user },
         });
       }
     );
@@ -104,6 +107,81 @@ const login = async (req, res) => {
   }
 };
 
-export { signup, login };
+const forgotPassword = async (req, res) => {
+  const { email } = req.body;
+
+  try {
+    // Generate a random token
+    const token = crypto.randomBytes(20).toString("hex");
+
+    // Create a password reset link
+    const resetLink = `https://dumbbelldoor.netlify.app/reset-password/${token}`;
+
+    // Send an email with the reset link
+    const transporter = nodemailer.createTransport({
+      host: "smtp.gmail.com",
+      port: 587,
+      secure: false,
+      auth: {
+        user: "dumbbelldoor.service@gmail.com",
+        pass: "pwfs oklw nhtf nnmz",
+      },
+    });
+
+    const mailOptions = {
+      from: ' "Dumbbell Door" <dumbbelldoor.service@gmail.com>',
+      to: "shikher.jaitly@gmail.com",
+      subject: "Password Reset",
+      html: `<p>You have requested a password reset. Click <a href="${resetLink}">here</a> to reset your password.</p>`,
+    };
+
+    transporter.sendMail(mailOptions, async (error, info) => {
+      if (error) {
+        console.log(error);
+        return errorHandler(res, 500, "Error sending email");
+      } else {
+        try {
+          // Store the token with the user's email in MongoDB
+          await ForgotPassword.create({ email, token });
+          console.log("Email sent: " + info.response);
+          return responseHandler(res, 200, "Password reset email sent");
+        } catch (error) {
+          console.error(error);
+          return errorHandler(res, 500, "Error storing password reset token");
+        }
+      }
+    });
+  } catch (error) {
+    console.error(error);
+    return errorHandler(res, 500, "Error generating password reset token");
+  }
+};
+
+const resetPassword = async (req, res) => {
+  const { token } = req.params;
+  const { newPassword } = req.body;
+
+  try {
+    // Find the token in MongoDB
+    const tokenDocument = await ForgotPassword.findOne({ token });
+
+    if (!tokenDocument) {
+      return errorHandler(res, 400, "Invalid or expired token");
+    }
+
+    // Reset the password for the user associated with the token
+    // You should implement your own logic to update the user's password
+    console.log(newPassword);
+
+    // Delete the token from MongoDB after password reset
+    await ForgotPassword.deleteOne({ token });
+    return responseHandler(res, 200, "Password reset successfully");
+  } catch (error) {
+    console.error(error);
+    return errorHandler(res, 500, "Error resetting password");
+  }
+};
+
+export { signup, login, forgotPassword, resetPassword };
 
 //tested
