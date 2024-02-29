@@ -130,7 +130,7 @@ const forgotPassword = async (req, res) => {
 
     const mailOptions = {
       from: ' "Dumbbell Door" <dumbbelldoor.service@gmail.com>',
-      to: "shikher.jaitly@gmail.com",
+      to: email,
       subject: "Password Reset",
       html: `<p>You have requested a password reset. Click <a href="${resetLink}">here</a> to reset your password.</p>`,
     };
