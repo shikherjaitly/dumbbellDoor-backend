@@ -15,54 +15,6 @@ dotenv.config();
 app.use(express.json());
 app.use(cors());
 
-// const generateRandomString = (length) => {
-//   return crypto
-//     .randomBytes(Math.ceil(length / 2))
-//     .toString("hex") // convert to hexadecimal format
-//     .slice(0, length); // return required number of characters
-// };
-
-// const sessionSecretKey = generateRandomString(32);
-
-// app.use(
-//   session({
-//     secret: sessionSecretKey,
-//     resave: false,
-//     saveUninitialized: false,
-//   })
-// );
-
-
-
-// passport.use(
-//   new GoogleStrategy(
-//     {
-//       clientID: process.env.GOOGLE_CLIENT_ID,
-//       clientSecret: process.env.GOOGLE_CLIENT_SECRET,
-//       callbackURL: "/auth/google/callback",
-//     },
-//     (accessToken, refreshToken, profile, done) => {
-//       console.log("Google Profile:", profile);
-//       // Save user profile data to the database or perform other actions
-//       return done(null, profile);
-//     }
-//   )
-// );
-
-// app.get(
-//   "/auth/google",
-//   passport.authenticate("google", { scope: ["profile", "email"] })
-// );
-
-// app.get(
-//   "/auth/google/callback",
-//   passport.authenticate("google", { failureRedirect: "/login" }),
-//   (req, res) => {
-//     // Successful authentication, redirect home or send JWT token
-//     res.redirect("/");
-//   }
-// );
-
 app.use("/api/auth", userRouter);
 app.use("/api/trainer", trainerRouter);
 app.use("/api/bookings", bookingRouter);
