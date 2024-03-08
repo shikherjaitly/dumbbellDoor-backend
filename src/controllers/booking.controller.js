@@ -88,4 +88,4 @@ const sendBookingDetails = async (req, res) => {
   }
 };
 
-export { bookSession, sendBookingDetails };
+export { sendBookingDetails };
