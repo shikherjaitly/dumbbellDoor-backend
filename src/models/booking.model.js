@@ -2,10 +2,10 @@ import mongoose from "mongoose";
 
 const bookingSchema = new mongoose.Schema(
   {
-    date: { type: Date, required: true },
-    customerEmail: { type: String, required: true },
-    trainerEmail: { type: String, required: true },
-    workoutType: [{ type: String, required: true }],
+    date: { type: Date },
+    customerEmail: { type: String },
+    trainerEmail: { type: String },
+    workoutType: { type: String },
     modeOfTraining: {
       type: String,
       enum: ["Online", "In-Person"],
@@ -17,10 +17,11 @@ const bookingSchema = new mongoose.Schema(
     },
     timeSlots: [
       {
-        startTime: { type: Number, required: true, min: 0, max: 24 },
-        endTime: { type: Number, required: true, min: 0, max: 24 },
+        startTime: { type: Number, min: 0, max: 24 },
+        endTime: { type: Number, min: 0, max: 24 },
       },
     ],
+    amount: { type: String },
   },
   { timestamps: true }
 );

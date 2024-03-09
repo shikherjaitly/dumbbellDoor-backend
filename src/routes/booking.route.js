@@ -1,8 +1,8 @@
 import express from "express";
-import { bookSession } from "../controllers/booking.controller.js";
+import { sendBookingDetails } from "../controllers/booking.controller.js";
 
 const router = express.Router();
 
-router.post("/book-session", bookSession);
+router.post("/send-booking-details", sendBookingDetails);
 
 export default router;
