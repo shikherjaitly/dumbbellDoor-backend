@@ -13,10 +13,9 @@ const sendBookingDetails = async (req, res) => {
     workoutType,
     date,
     timeSlots,
-    startTime,
-    endTime,
     amount,
   } = req.body;
+  const { startTime, endTime } = timeSlots[0];
 
   try {
     // Send an email with the booking details
@@ -41,9 +40,9 @@ const sendBookingDetails = async (req, res) => {
           <li>Mode of Training : ${modeOfTraining}</li>
           <li>Workout Type : ${workoutType}</li>
           <li>Booking Date : ${date}</li>
-          <li>Start Time : ${startTime}</li>
-          <li>End Time : ${endTime}</li>
-          <li>Amount Paid : ${amount}</li>
+          <li>Start Time : ${startTime}:00 Hours</li>
+          <li>End Time : ${endTime}:00 Hours</li>
+          <li>Amount Paid : Rs. ${amount}</li>
         </ul>
         <p>Regards,</p>
         <p><b>Dumbbell Door</b></p> 
@@ -88,4 +87,115 @@ const sendBookingDetails = async (req, res) => {
   }
 };
 
-export { sendBookingDetails };
+const updateBookingDetails = async (req, res) => {
+  const {
+    trainerName,
+    customerName,
+    customerEmail,
+    trainerEmail,
+    modeOfTraining,
+    workoutType,
+    date,
+    timeSlots,
+    amount,
+  } = req.body;
+  const { startTime, endTime } = timeSlots[0];
+  const { bookingId } = req.params;
+
+  try {
+    // Send an email with the booking details
+    const transporter = nodemailer.createTransport({
+      host: "smtp.gmail.com",
+      port: 587,
+      secure: false,
+      auth: {
+        user: "dumbbelldoor.service@gmail.com",
+        pass: "pwfs oklw nhtf nnmz",
+      },
+    });
+
+    const mailOptions = {
+      from: ' "Dumbbell Door" <dumbbelldoor.service@gmail.com>',
+      to: customerEmail,
+      subject: "Revised booking details!",
+      html: `<div> 
+      <p>Hi <b>${customerName}</b>, below are your updated booking details,</p>
+        <ul>
+          <li>Trainer Name : ${trainerName}</li>
+          <li>Mode of Training : ${modeOfTraining}</li>
+          <li>Workout Type : ${workoutType}</li>
+          <li>Booking Date : ${date}</li>
+          <li>Start Time : ${startTime}:00 Hours</li>
+          <li>End Time : ${endTime}:00 Hours</li>
+          <li>Amount Paid : ${amount}</li>
+        </ul>
+        <p>Regards,</p>
+        <p><b>Dumbbell Door</b></p> 
+      </div>`,
+    };
+
+    transporter.sendMail(mailOptions, async (error, info) => {
+      if (error) {
+        console.log(error);
+        return errorHandler(res, 500, "Error sending email");
+      } else {
+        try {
+          // console.log("Email sent: " + info.response);
+          const date = new Date();
+          const formattedDate = `${date.getDate()}/${
+            date.getMonth() + 1
+          }/${date.getFullYear()}`;
+
+          await Booking.updateOne(
+            { _id: bookingId },
+            {
+              date: formattedDate,
+              customerEmail,
+              trainerEmail,
+              workoutType,
+              modeOfTraining,
+              timeSlots,
+              bookingStatus: "Requested",
+              amount,
+            }
+          );
+          return responseHandler(
+            res,
+            200,
+            "Reschedule confirmed, please check your mail for updated booking details!"
+          );
+        } catch (error) {
+          console.error(error);
+          return errorHandler(res, 500, error.message);
+        }
+      }
+    });
+  } catch (error) {
+    console.error(error);
+    return errorHandler(res, 500, error.message);
+  }
+};
+
+const updateBookingStatus = async (req, res) => {
+  try {
+    const { bookingId } = req.params;
+    const { bookingStatus } = req.body;
+
+    const booking = await Booking.findById({ _id: bookingId });
+    if (!booking) {
+      return res.status(404).json({ error: "Booking not found!" });
+    }
+
+    await Booking.updateOne({ _id: bookingId }, { bookingStatus });
+    return res
+      .status(200)
+      .json({ message: "Booking status updated successfully." });
+  } catch (error) {
+    console.error("Error updating booking status:", error);
+    return res.status(500).json({
+      error: "Error updating booking status. Please try again later.",
+    });
+  }
+};
+
+export { sendBookingDetails, updateBookingDetails, updateBookingStatus };
