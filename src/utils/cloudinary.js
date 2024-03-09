@@ -13,8 +13,9 @@ cloudinary.config({
 
 const uploadProfilePictureToCloudinary = async (filepath) => {
   try {
+    const timestamp = new Date().getTime();
     const response = await cloudinary.uploader.upload(filepath, {
-      public_id: "profile-picture",
+      public_id: `profile-picture-${timestamp}`,
     });
     return response.url;
   } catch (error) {
