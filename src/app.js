@@ -1,8 +1,5 @@
 import express from "express";
 import cors from "cors";
-import crypto from "crypto";
-import session from "express-session";
-// import { Strategy as GoogleStrategy } from "passport-google-oauth20";
 import dotenv from "dotenv";
 import errorHandler from "./utils/errorHandler.js";
 import userRouter from "../src/routes/user.route.js";
