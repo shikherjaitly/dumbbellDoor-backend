@@ -1,3 +1,8 @@
+//store the session in cookies and make a sign out endpoint to remove the session from the database
+//add an admin route that lists all users with
+//todo imporve the logout code
+//todo create a middleware to run before everycode
+//todo 
 import emailValidator from "deep-email-validator";
 import dotenv from "dotenv";
 import bcrypt from "bcrypt";
@@ -51,6 +56,90 @@ const signup = async (req, res) => {
   }
 };
 
+const logout = async (req, res) => {
+  // Destroy session data and remove cookie from
+  // client's browser to log out the
+  // current logged in user by clearing the
+  // session
+
+  try {
+    console.log(req.cookies);
+    const accessToken = req.cookies.accessToken;
+
+    if (!accessToken) {
+      return errorHandler(res, 403, "No Access Token found");
+    }
+
+    await Session.deleteOne({ accessToken });
+
+    res.clearCookie('accessToken');
+
+    return responseHandler(res, 200, "LogOut successfull");
+
+  } catch (error) {
+    console.error(error);
+    return errorHandler(res, 500, "Error Loggin Out");
+  }
+
+};
+
+// const login = async (req, res) => {
+//   const { email, password } = req.body;
+
+//   // Check if email and password are provided
+//   if (!(email && password)) {
+//     return errorHandler(res, 406, "Email & password are mandatory!");
+//   }
+
+//   // Validate email
+//   const response = await emailValidator.validate({
+//     email,
+//     validateSMTP: false,
+//   });
+//   if (!response.valid) {
+//     return errorHandler(res, 400, "Please provide a valid email address!");
+//   }
+
+//   // Check if user is already logged in
+//   const isActiveUser = await Session.findOne({ email });
+//   if (isActiveUser) {
+//     return errorHandler(
+//       res,
+//       400,
+//       "You're already logged in, kindly continue with the session!"
+//     );
+//   }
+
+//   // Check if user exists
+//   const user =
+//     (await Customer.findOne({ email })) || (await Trainer.findOne({ email }));
+//   if (!user) {
+//     return errorHandler(res, 400, `User is not registered!`);
+//   }
+
+//   // Validate user credentials
+//   const validUser = await bcrypt.compare(password, user.password);
+//   if (validUser) {
+//     // Generate JWT token and create session
+//     jwt.sign(
+//       { email, password },
+//       process.env.JWT_SECRETKEY,
+//       { expiresIn: "1d" },
+//       async (err, token) => {
+//         await Session.create({ email, accessToken: token });
+
+
+//         return res.status(200).json({
+//           success: true,
+//           message: "Login successful!",
+//           responseData: { accessToken: token, userDetails: user },
+//         });
+//       }
+//     );
+//   } else {
+//     return errorHandler(res, 404, "Invalid credentials!");
+//   }
+// };
 const login = async (req, res) => {
   const { email, password } = req.body;
 
@@ -76,6 +165,7 @@ const login = async (req, res) => {
       400,
       "You're already logged in, kindly continue with the session!"
     );
+    // return session.findOne({ email });
   }
 
   // Check if user exists
@@ -88,20 +178,31 @@ const login = async (req, res) => {
   // Validate user credentials
   const validUser = await bcrypt.compare(password, user.password);
   if (validUser) {
-    // Generate JWT token and create session
-    jwt.sign(
+    // Generate JWT token
+    const token = jwt.sign(
       { email, password },
       process.env.JWT_SECRETKEY,
-      { expiresIn: "1d" },
-      async (err, token) => {
-        await Session.create({ email, accessToken: token });
-        return res.status(200).json({
-          success: true,
-          message: "Login successful!",
-          responseData: { accessToken: token, userDetails: user },
-        });
-      }
+      { expiresIn: "1d" }
     );
+
+    // Store the token in a cookie
+    // res.cookie('accessToken', token, { httpOnly: true });
+    // res.cookie('userEmail', email );
+    const cookieObject = {
+      accessToken: token,
+      userEmail: email
+    };
+    
+    res.cookie(cookieObject);
+    console.log(cookieObject);
+    // Create session
+    await Session.create({ email, accessToken: token });
+
+    return res.status(200).json({
+      success: true,
+      message: "Login successful!",
+      responseData: cookieObject ,
+    });
   } else {
     return errorHandler(res, 404, "Invalid credentials!");
   }
@@ -201,6 +302,7 @@ const resetPassword = async (req, res) => {
   }
 };
 
-export { signup, login, forgotPassword, resetPassword };
+
+export { signup, login, forgotPassword, resetPassword ,logout};
 
 //tested

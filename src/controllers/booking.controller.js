@@ -198,4 +198,58 @@ const updateBookingStatus = async (req, res) => {
   }
 };
 
-export { sendBookingDetails, updateBookingDetails, updateBookingStatus };
+const getBookingsByUser = async (req, res) => {
+  // try {
+  //   let userType;
+  //   let userEmail;
+
+  //   // Determine user type based on the presence of cookies
+  //   if (req.cookies.customerEmail) {
+  //     userType = "customer";
+  //     userEmail = req.cookies.customerEmail;
+  //   } else if (req.cookies.trainerEmail) {
+  //     userType = "trainer";
+  //     userEmail = req.cookies.trainerEmail;
+  //   } else {
+  //     return res.status(400).json({ message: "User type not recognized." });
+  //   }
+
+  //   // Fetch bookings based on user type and email
+  //   const bookings = await Booking.find({
+  //     [`${userType}Email`]: userEmail,
+  //   });
+
+  //   res.json(bookings);
+  // } catch (error) {
+  //   res.status(500).json({ message: error.message });
+  // }
+  try {
+    const { userEmail } = req.body;
+
+    if ( !userEmail ) {
+      return res
+        .status(400)
+        .json({ message: "User type and email are required." });
+    }
+
+    // Fetch bookings based on user type and email
+    const bookings = await Booking.find({
+      [`${userType}Email`]: userEmail,
+    });
+
+    //req.cookies.accessToken;
+    //const token = jwt.decode(accessToken);
+    //token.email = userEmail;
+
+    res.json(bookings);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
+export {
+  sendBookingDetails,
+  updateBookingDetails,
+  updateBookingStatus,
+  getBookingsByUser,
+};

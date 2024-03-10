@@ -5,11 +5,21 @@ import errorHandler from "./utils/errorHandler.js";
 import userRouter from "../src/routes/user.route.js";
 import trainerRouter from "../src/routes/trainer.route.js";
 import bookingRouter from "../src/routes/booking.route.js";
+import cookieParser from "cookie-parser";
 
 const app = express();
 dotenv.config();
 
+const corsOptions = {
+  origin:[
+    "http://localhost:3000",
+    "*"
+  ],
+  credentials: true
+}
+
 app.use(express.json());
+app.use(cookieParser());
 app.use(cors());
 
 app.use("/api/auth", userRouter);
