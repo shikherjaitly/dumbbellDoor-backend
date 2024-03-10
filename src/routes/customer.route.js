@@ -14,6 +14,6 @@ router.patch(
   buildCustomerProfile
 );
 
-router.get(`/fetchCustomerDetails/:_id`, fetchCustomerDetails);
+router.get(`/fetchCustomerDetails`, fetchCustomerDetails);
 
 export default router;
