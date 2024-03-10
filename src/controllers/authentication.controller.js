@@ -2,7 +2,7 @@
 //add an admin route that lists all users with
 //todo imporve the logout code
 //todo create a middleware to run before everycode
-//todo 
+//todo
 import emailValidator from "deep-email-validator";
 import dotenv from "dotenv";
 import bcrypt from "bcrypt";
@@ -72,139 +72,96 @@ const logout = async (req, res) => {
 
     await Session.deleteOne({ accessToken });
 
-    res.clearCookie('accessToken');
+    res.clearCookie("accessToken");
+    res.clearCookie("userEmail");
+    res.clearCookie("userId");
+    res.clearCookie("userRole");
 
     return responseHandler(res, 200, "LogOut successfull");
-
   } catch (error) {
     console.error(error);
     return errorHandler(res, 500, "Error Loggin Out");
   }
-
 };
 
-// const login = async (req, res) => {
-//   const { email, password } = req.body;
 
-//   // Check if email and password are provided
-//   if (!(email && password)) {
-//     return errorHandler(res, 406, "Email & password are mandatory!");
-//   }
-
-//   // Validate email
-//   const response = await emailValidator.validate({
-//     email,
-//     validateSMTP: false,
-//   });
-//   if (!response.valid) {
-//     return errorHandler(res, 400, "Please provide a valid email address!");
-//   }
-
-//   // Check if user is already logged in
-//   const isActiveUser = await Session.findOne({ email });
-//   if (isActiveUser) {
-//     return errorHandler(
-//       res,
-//       400,
-//       "You're already logged in, kindly continue with the session!"
-//     );
-//   }
-
-//   // Check if user exists
-//   const user =
-//     (await Customer.findOne({ email })) || (await Trainer.findOne({ email }));
-//   if (!user) {
-//     return errorHandler(res, 400, `User is not registered!`);
-//   }
-
-//   // Validate user credentials
-//   const validUser = await bcrypt.compare(password, user.password);
-//   if (validUser) {
-//     // Generate JWT token and create session
-//     jwt.sign(
-//       { email, password },
-//       process.env.JWT_SECRETKEY,
-//       { expiresIn: "1d" },
-//       async (err, token) => {
-//         await Session.create({ email, accessToken: token });
-
-
-//         return res.status(200).json({
-//           success: true,
-//           message: "Login successful!",
-//           responseData: { accessToken: token, userDetails: user },
-//         });
-//       }
-//     );
-//   } else {
-//     return errorHandler(res, 404, "Invalid credentials!");
-//   }
-// };
 const login = async (req, res) => {
-  const { email, password } = req.body;
+  try {
+    const { email, password } = req.body;
 
-  // Check if email and password are provided
-  if (!(email && password)) {
-    return errorHandler(res, 406, "Email & password are mandatory!");
-  }
+    // Check if email and password are provided
+    if (!(email && password)) {
+      return errorHandler(res, 406, "Email & password are mandatory!");
+    }
 
-  // Validate email
-  const response = await emailValidator.validate({
-    email,
-    validateSMTP: false,
-  });
-  if (!response.valid) {
-    return errorHandler(res, 400, "Please provide a valid email address!");
-  }
-
-  // Check if user is already logged in
-  const isActiveUser = await Session.findOne({ email });
-  if (isActiveUser) {
-    return errorHandler(
-      res,
-      400,
-      "You're already logged in, kindly continue with the session!"
-    );
-    // return session.findOne({ email });
-  }
-
-  // Check if user exists
-  const user =
-    (await Customer.findOne({ email })) || (await Trainer.findOne({ email }));
-  if (!user) {
-    return errorHandler(res, 400, `User is not registered!`);
-  }
-
-  // Validate user credentials
-  const validUser = await bcrypt.compare(password, user.password);
-  if (validUser) {
-    // Generate JWT token
-    const token = jwt.sign(
-      { email, password },
-      process.env.JWT_SECRETKEY,
-      { expiresIn: "1d" }
-    );
-
-    // Store the token in a cookie
-    // res.cookie('accessToken', token, { httpOnly: true });
-    // res.cookie('userEmail', email );
-    const cookieObject = {
-      accessToken: token,
-      userEmail: email
-    };
-    
-    res.cookie(cookieObject);
-    console.log(cookieObject);
-    // Create session
-    await Session.create({ email, accessToken: token });
-
-    return res.status(200).json({
-      success: true,
-      message: "Login successful!",
-      responseData: cookieObject ,
+    // Validate email
+    const response = await emailValidator.validate({
+      email,
+      validateSMTP: false,
     });
-  } else {
-    return errorHandler(res, 404, "Invalid credentials!");
+    if (!response.valid) {
+      return errorHandler(res, 400, "Please provide a valid email address!");
+    }
+
+    // Check if user is already logged in
+    const isActiveUser = await Session.findOne({ email });
+    if (isActiveUser) {
+      return errorHandler(
+        res,
+        400,
+        "You're already logged in, kindly continue with the session!"
+      );
+    }
+
+    // Check if user exists in Trainer collection
+    let user = await Trainer.findOne({ email });
+    let role = "Trainer"; // Assuming Trainer as default role
+    if (!user) {
+      // If not found in Trainer collection, check in Customer collection
+      user = await Customer.findOne({ email });
+      role = "Customer"; // Assuming Customer as default role
+    }
+
+    if (!user) {
+      return errorHandler(res, 400, `User is not registered!`);
+    }
+
+    // Validate user credentials
+    const validUser = await bcrypt.compare(password, user.password);
+    if (validUser) {
+      // Generate JWT token
+      const token = jwt.sign(
+        { email: user.email, role },
+        process.env.JWT_SECRETKEY,
+        { expiresIn: "1d" }
+      );
+
+      // Store the token in a cookie
+      const cookieObject = {
+        accessToken: token,
+        userId: user.id,
+        userEmail: user.email,
+        userRole: role,
+      };
+      res.cookie('accessToken', token, { httpOnly: true });
+      res.cookie('userEmail', email );
+      res.cookie('userId',  user.id);
+      res.cookie('userRole', role);
+
+      // Create session
+      await Session.create({ email: user.email, accessToken: token });
+
+      return res.status(200).json({
+        success: true,
+        message: "Login successful!",
+        responseData: cookieObject,
+      });
+    } else {
+      return errorHandler(res, 404, "Invalid credentials!");
+    }
+  } catch (error) {
+    console.error(error);
+    return errorHandler(res, 500, "Error during login");
   }
 };
 
@@ -261,7 +218,7 @@ const forgotPassword = async (req, res) => {
 const resetPassword = async (req, res) => {
   const { token } = req.params;
   const { newPassword } = req.body;
-  const  hashedNewPassword = await bcrypt.hash(newPassword,8);
+  const hashedNewPassword = await bcrypt.hash(newPassword, 8);
   try {
     // Find the token in MongoDB
     const tokenDocument = await ForgotPassword.findOne({ token });
@@ -270,12 +227,11 @@ const resetPassword = async (req, res) => {
       return errorHandler(res, 400, "Invalid or expired token");
     }
 
-
     let updatedUser;
     if (await Trainer.exists({ email: tokenDocument.email })) {
       updatedUser = await Trainer.findOneAndUpdate(
         { email: tokenDocument.email },
-        { password: hashedNewPassword },
+        { password: hashedNewPassword }
       );
     } else if (await Customer.exists({ email: tokenDocument.email })) {
       updatedUser = await Customer.findOneAndUpdate(
@@ -302,7 +258,6 @@ const resetPassword = async (req, res) => {
   }
 };
 
-
-export { signup, login, forgotPassword, resetPassword ,logout};
+export { signup, login, forgotPassword, resetPassword, logout };
 
 //tested

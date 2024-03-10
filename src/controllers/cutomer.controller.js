@@ -67,9 +67,9 @@ const buildCustomerProfile = async (req, res) => {
 };
 
 const fetchCustomerDetails = async (req, res) => {
-  const { _id } = req.params;
+  const { email } = req.body;
   try {
-    const customerDetails = await Customer.findOne({ _id });
+    const customerDetails = await Customer.findOne({ email });
     return responseHandler(res, 200, customerDetails);
   } catch (error) {
     errorHandler(res, 500, "Error fetching customer details!");

@@ -88,9 +88,9 @@ const getTrainers = async (req, res) => {
 };
 
 const fetchTrainerDetails = async (req, res) => {
-  const { _id } = req.params;
+  const { email } = req.body;
   try {
-    const trainerDetails = await Trainer.findOne({ _id });
+    const trainerDetails = await Trainer.findOne({ email });
     return responseHandler(res, 200, trainerDetails);
   } catch (error) {
     errorHandler(res, 500, "Error fetching trainer details!");
