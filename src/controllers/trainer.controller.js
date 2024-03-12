@@ -51,6 +51,7 @@ const buildTrainerProfile = async (req, res) => {
       },
       {
         name,
+        role: "Trainer",
         gender,
         profilePicture: profilePicturePath,
         description,
@@ -88,9 +89,9 @@ const getTrainers = async (req, res) => {
 };
 
 const fetchTrainerDetails = async (req, res) => {
-  const { email } = req.body;
+  const { _id } = req.params;
   try {
-    const trainerDetails = await Trainer.findOne({ email });
+    const trainerDetails = await Trainer.findById({ _id });
     return responseHandler(res, 200, trainerDetails);
   } catch (error) {
     errorHandler(res, 500, "Error fetching trainer details!");

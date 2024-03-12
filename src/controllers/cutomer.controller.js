@@ -16,7 +16,6 @@ const buildCustomerProfile = async (req, res) => {
     fitnessGoals,
     bodyFat,
   } = req.body;
- 
 
   const profilePicture = req.file?.path;
 
@@ -49,6 +48,7 @@ const buildCustomerProfile = async (req, res) => {
       },
       {
         name,
+        role: "Customer",
         gender,
         location,
         phoneNumber,
@@ -67,9 +67,9 @@ const buildCustomerProfile = async (req, res) => {
 };
 
 const fetchCustomerDetails = async (req, res) => {
-  const { email } = req.body;
+  const { _id } = req.params;
   try {
-    const customerDetails = await Customer.findOne({ email });
+    const customerDetails = await Customer.findById({ _id });
     return responseHandler(res, 200, customerDetails);
   } catch (error) {
     errorHandler(res, 500, "Error fetching customer details!");

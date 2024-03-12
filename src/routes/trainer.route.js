@@ -17,6 +17,6 @@ router.patch(
 
 router.get("/getTrainers", getTrainers);
 
-router.get(`/fetchTrainerDetails`, fetchTrainerDetails);
+router.get(`/fetchTrainerDetails/:_id`, fetchTrainerDetails);
 
 export default router;
