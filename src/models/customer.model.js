@@ -5,16 +5,16 @@ const customerSchema = new mongoose.Schema(
   {
     name: { type: String },
     email: { type: String, required: true, unique: true },
-    phoneNumber: {type: String},
+    role: { type: String },
+    phoneNumber: { type: String },
     password: { type: String, required: true },
-    gender: {type:String},
-    height: {type: String},
-    weight: {type: String},
-    bodyFat: {type: String},
+    gender: { type: String },
+    height: { type: String },
+    weight: { type: String },
+    bodyFat: { type: String },
     age: { type: String },
     location: { type: String },
     fitnessGoals: [{ type: String }],
-
   },
   { timestamps: true }
 );
