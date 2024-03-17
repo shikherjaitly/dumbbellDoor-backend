@@ -6,6 +6,7 @@ const customerSchema = new mongoose.Schema(
     name: { type: String },
     email: { type: String, required: true, unique: true },
     role: { type: String },
+    profileStatus:{ type: String, required: true},
     phoneNumber: { type: String },
     password: { type: String, required: true },
     gender: { type: String },

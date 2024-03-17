@@ -5,6 +5,7 @@ const trainerSchema = new mongoose.Schema(
   {
     name: { type: String },
     email: { type: String, required: true, unique: true },
+    profileStatus: {type: String, required: true},
     password: { type: String, required: true },
     role: { type: String },
     gender: { type: String },

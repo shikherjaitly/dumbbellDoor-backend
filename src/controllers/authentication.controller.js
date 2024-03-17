@@ -3,6 +3,7 @@
 //todo imporve the logout code
 //todo create a middleware to run before everycode
 //todo
+
 import emailValidator from "deep-email-validator";
 import dotenv from "dotenv";
 import bcrypt from "bcrypt";
@@ -49,7 +50,7 @@ const signup = async (req, res) => {
     }
 
     const user = role === "customer" ? Customer : Trainer;
-    await user.create({ email, password });
+    await user.create({ email, password, profileStatus: "incomplete"});
     return responseHandler(res, 200, "Signup successful!");
   } catch (error) {
     return errorHandler(res, 400, "An error occurred: " + error);
@@ -76,6 +77,7 @@ const logout = async (req, res) => {
     res.clearCookie("userEmail");
     res.clearCookie("userId");
     res.clearCookie("userRole");
+    res.clearCookie("userProfileStatus");
 
     return responseHandler(res, 200, "LogOut successfull");
   } catch (error) {
@@ -83,7 +85,6 @@ const logout = async (req, res) => {
     return errorHandler(res, 500, "Error Loggin Out");
   }
 };
-
 
 const login = async (req, res) => {
   try {
@@ -142,11 +143,13 @@ const login = async (req, res) => {
         userId: user.id,
         userEmail: user.email,
         userRole: role,
+        userProfileStatus: user.profileStatus,
       };
-      res.cookie('accessToken', token, { httpOnly: true });
-      res.cookie('userEmail', email );
-      res.cookie('userId',  user.id);
-      res.cookie('userRole', role);
+      res.cookie("accessToken", token, { httpOnly: true });
+      res.cookie("userEmail", email);
+      res.cookie("userId", user.id);
+      res.cookie("userRole", role);
+      res.cookie("userProfileStatus", user.profileStatus);
 
       // Create session
       await Session.create({ email: user.email, accessToken: token });

@@ -63,6 +63,7 @@ const buildTrainerProfile = async (req, res) => {
         location,
         phoneNumber,
         testimonials,
+        profileStatus: "complete",
       }
     ).then(() => {
       return responseHandler(res, 200, "Profile completed!");
