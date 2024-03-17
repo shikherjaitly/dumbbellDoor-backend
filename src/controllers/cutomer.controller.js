@@ -57,6 +57,7 @@ const buildCustomerProfile = async (req, res) => {
         age,
         fitnessGoals,
         bodyFat,
+        profileStatus: "complete",
       }
     ).then(() => {
       return responseHandler(res, 200, "Profile completed!");
