@@ -13,6 +13,7 @@ const buildCustomerProfile = async (req, res) => {
     height,
     weight,
     age,
+    language,
     fitnessGoals,
     bodyFat,
   } = req.body;
@@ -21,15 +22,19 @@ const buildCustomerProfile = async (req, res) => {
 
   if (
     !(
-      name &&
-      email &&
-      gender &&
-      location &&
-      phoneNumber &&
-      height &&
-      weight &&
-      age &&
-      fitnessGoals
+      (
+        name &&
+        email &&
+        gender &&
+        profilePicture &&
+        location &&
+        phoneNumber &&
+        height &&
+        weight &&
+        age &&
+        language
+      )
+      // fitnessGoals
     )
   ) {
     return errorHandler(res, 406, "All fields are mandatory!");
@@ -50,12 +55,14 @@ const buildCustomerProfile = async (req, res) => {
         name,
         role: "Customer",
         gender,
+        profilePicture: profilePicturePath,
         location,
         phoneNumber,
         height,
         weight,
         age,
-        fitnessGoals,
+        language,
+        // fitnessGoals,
         bodyFat,
         profileStatus: "complete",
       }
