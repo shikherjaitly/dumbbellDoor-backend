@@ -2,9 +2,12 @@ import mongoose from "mongoose";
 
 const bookingSchema = new mongoose.Schema(
   {
-    date: { type: Date },
+    date: { type: String },
+    customerId: { type: String },
+    trainerId: { type: String },
     customerEmail: { type: String },
     trainerEmail: { type: String },
+    trainerName: { type: String },
     workoutType: { type: String },
     modeOfTraining: {
       type: String,

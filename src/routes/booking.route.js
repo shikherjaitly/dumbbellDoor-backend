@@ -11,5 +11,6 @@ const router = express.Router();
 router.post("/send-booking-details", sendBookingDetails);
 router.patch("/update-booking-details/:bookingId", updateBookingDetails);
 router.patch("/update-booking-status/:bookingId", updateBookingStatus);
-router.get("/", getBookingsByUser);
+router.get("/:email", getBookingsByUser);
+
 export default router;

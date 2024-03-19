@@ -47,6 +47,10 @@ const buildCustomerProfile = async (req, res) => {
     if (!profilePicturePath) {
       return errorHandler(res, 500, "Failed to upload file on cloudinary!");
     }
+    const isCustomerRegistered = await Customer.findOne({ email });
+    if (!isCustomerRegistered) {
+      return errorHandler(res, 500, "Invalid email address!");
+    }
     await Customer.updateOne(
       {
         email,
@@ -64,11 +68,62 @@ const buildCustomerProfile = async (req, res) => {
         language,
         // fitnessGoals,
         bodyFat,
-        profileStatus: "complete",
+        profileStatus: "pending",
       }
     ).then(() => {
       return responseHandler(res, 200, "Profile completed!");
     });
+  } catch (error) {
+    errorHandler(res, 500, error.message);
+  }
+};
+
+const editCustomerProfile = async (req, res) => {
+  const {
+    name,
+    email,
+    gender,
+    location,
+    phoneNumber,
+    height,
+    weight,
+    age,
+    language,
+    fitnessGoals,
+    bodyFat,
+  } = req.body;
+
+  const profilePicturePath = req.file
+    ? await uploadProfilePictureToCloudinary(req.file.path)
+    : null;
+
+  try {
+    const isCustomerRegistered = await Customer.findOne({ email });
+    if (!isCustomerRegistered) {
+      return errorHandler(res, 500, "Invalid email address!");
+    }
+
+    const updatedProfile = {
+      name,
+      role: "Customer",
+      gender,
+      location,
+      phoneNumber,
+      height,
+      weight,
+      age,
+      language,
+      bodyFat,
+      profileStatus: "complete",
+    };
+
+    if (profilePicturePath) {
+      updatedProfile.profilePicture = profilePicturePath;
+    }
+
+    await Customer.updateOne({ email }, updatedProfile);
+
+    responseHandler(res, 200, "Profile updated successfully!");
   } catch (error) {
     errorHandler(res, 500, error.message);
   }
@@ -84,4 +139,4 @@ const fetchCustomerDetails = async (req, res) => {
   }
 };
 
-export { buildCustomerProfile, fetchCustomerDetails };
+export { buildCustomerProfile, fetchCustomerDetails, editCustomerProfile };

@@ -7,7 +7,7 @@ const customerSchema = new mongoose.Schema(
     email: { type: String, required: true, unique: true },
     role: { type: String },
     profilePicture: { type: String },
-    profileStatus: { type: String, required: true },
+    profileStatus: { type: String },
     phoneNumber: { type: String },
     password: { type: String, required: true },
     gender: { type: String },
