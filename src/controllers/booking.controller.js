@@ -56,14 +56,16 @@ const sendBookingDetails = async (req, res) => {
       } else {
         try {
           // console.log("Email sent: " + info.response);
-          const date = new Date();
-          const formattedDate = `${date.getDate()}/${
-            date.getMonth() + 1
-          }/${date.getFullYear()}`;
+          // const date = new Date();
+          // const formattedDate = `${date.getDate()}/${
+          //   date.getMonth() + 1
+          // }/${date.getFullYear()}`;
           await Booking.create({
-            date: formattedDate,
+            date,
             customerEmail,
+            customerName,
             trainerEmail,
+            trainerName,
             workoutType,
             modeOfTraining,
             timeSlots,
@@ -89,8 +91,10 @@ const sendBookingDetails = async (req, res) => {
 
 const updateBookingDetails = async (req, res) => {
   const {
-    trainerName,
+    customerId,
+    trainerId,
     customerName,
+    trainerName,
     customerEmail,
     trainerEmail,
     modeOfTraining,
@@ -141,17 +145,20 @@ const updateBookingDetails = async (req, res) => {
       } else {
         try {
           // console.log("Email sent: " + info.response);
-          const date = new Date();
-          const formattedDate = `${date.getDate()}/${
-            date.getMonth() + 1
-          }/${date.getFullYear()}`;
+          // const date = new Date();
+          // const formattedDate = `${date.getDate()}/${
+          //   date.getMonth() + 1
+          // }/${date.getFullYear()}`;
 
           await Booking.updateOne(
             { _id: bookingId },
             {
-              date: formattedDate,
+              date,
+              customerId,
+              trainerId,
               customerEmail,
               trainerEmail,
+              trainerName,
               workoutType,
               modeOfTraining,
               timeSlots,
@@ -224,26 +231,24 @@ const getBookingsByUser = async (req, res) => {
   //   res.status(500).json({ message: error.message });
   // }
   try {
-    const { userEmail } = req.body;
+    const { email } = req.params;
 
-    if ( !userEmail ) {
-      return res
-        .status(400)
-        .json({ message: "User type and email are required." });
+    if (!email) {
+      return errorHandler(res, 400, "User email is required.");
     }
 
     // Fetch bookings based on user type and email
     const bookings = await Booking.find({
-      [`${userType}Email`]: userEmail,
+      customerEmail: email,
     });
 
     //req.cookies.accessToken;
     //const token = jwt.decode(accessToken);
     //token.email = userEmail;
 
-    res.json(bookings);
+    return responseHandler(res, 200, bookings);
   } catch (error) {
-    res.status(500).json({ message: error.message });
+    return errorHandler(res, 500, error.message);
   }
 };
 
