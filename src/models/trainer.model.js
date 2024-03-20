@@ -18,25 +18,14 @@ const trainerSchema = new mongoose.Schema(
     availability: [
       {
         day: { type: String },
-        timeSlots: [
-          {
-            startTime: { type: Number, min: 0, max: 24 },
-            endTime: { type: Number, min: 0, max: 24 },
-          },
-        ],
+        startTime: { type: Number, min: 0, max: 24 },
+        endTime: { type: Number, min: 0, max: 24 },
       },
     ],
     location: { type: String },
     phoneNumber: { type: String },
     instagram: { type: String },
     facebook: { type: String },
-    testimonials: [
-      {
-        customerId: { type: mongoose.Schema.Types.ObjectId, ref: "Customer" },
-        rating: { type: Number },
-        comment: { type: String },
-      },
-    ],
   },
   { timestamps: true }
 );

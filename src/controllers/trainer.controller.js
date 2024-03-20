@@ -45,6 +45,13 @@ const buildTrainerProfile = async (req, res) => {
     if (!profilePicturePath) {
       return errorHandler(res, 500, "Failed to upload file on cloudinary!");
     }
+    // const availabilityData = req.body.availability.map(
+    //   ({ day, startTime, endTime }) => ({
+    //     day,
+    //     startTime,
+    //     endTime,
+    //   })
+    // );
     await Trainer.updateOne(
       {
         email,
