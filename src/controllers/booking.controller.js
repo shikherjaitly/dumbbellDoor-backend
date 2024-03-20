@@ -6,16 +6,18 @@ import responseHandler from "../utils/responseHandler.js";
 const sendBookingDetails = async (req, res) => {
   const {
     trainerName,
+    trainerId,
     customerName,
+    customerId,
     customerEmail,
     trainerEmail,
     modeOfTraining,
     workoutType,
     date,
-    timeSlots,
+    startTime,
+    endTime,
     amount,
   } = req.body;
-  const { startTime, endTime } = timeSlots[0];
 
   try {
     // Send an email with the booking details
@@ -26,6 +28,9 @@ const sendBookingDetails = async (req, res) => {
       auth: {
         user: "dumbbelldoor.service@gmail.com",
         pass: "pwfs oklw nhtf nnmz",
+      },
+      tls: {
+        rejectUnauthorized: false, // Ignore SSL certificate validation
       },
     });
 
@@ -52,23 +57,21 @@ const sendBookingDetails = async (req, res) => {
     transporter.sendMail(mailOptions, async (error, info) => {
       if (error) {
         console.log(error);
-        return errorHandler(res, 500, "Error sending email");
+        return errorHandler(res, 500, "Error sending email " + error.message);
       } else {
         try {
-          // console.log("Email sent: " + info.response);
-          // const date = new Date();
-          // const formattedDate = `${date.getDate()}/${
-          //   date.getMonth() + 1
-          // }/${date.getFullYear()}`;
           await Booking.create({
             date,
+            customerId,
+            trainerId,
             customerEmail,
             customerName,
             trainerEmail,
             trainerName,
             workoutType,
             modeOfTraining,
-            timeSlots,
+            startTime,
+            endTime,
             bookingStatus: "Requested",
             amount,
           });
@@ -100,10 +103,10 @@ const updateBookingDetails = async (req, res) => {
     modeOfTraining,
     workoutType,
     date,
-    timeSlots,
+    startTime,
+    endTime,
     amount,
   } = req.body;
-  const { startTime, endTime } = timeSlots[0];
   const { bookingId } = req.params;
 
   try {
@@ -115,6 +118,9 @@ const updateBookingDetails = async (req, res) => {
       auth: {
         user: "dumbbelldoor.service@gmail.com",
         pass: "pwfs oklw nhtf nnmz",
+      },
+      tls: {
+        rejectUnauthorized: false, // Ignore SSL certificate validation
       },
     });
 
@@ -157,11 +163,13 @@ const updateBookingDetails = async (req, res) => {
               customerId,
               trainerId,
               customerEmail,
+              customerName,
               trainerEmail,
               trainerName,
               workoutType,
               modeOfTraining,
-              timeSlots,
+              startTime,
+              endTime,
               bookingStatus: "Requested",
               amount,
             }

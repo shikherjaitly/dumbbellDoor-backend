@@ -18,12 +18,10 @@ const bookingSchema = new mongoose.Schema(
       type: String,
       enum: ["Requested", "Completed", "Upcoming"],
     },
-    timeSlots: [
-      {
-        startTime: { type: Number, min: 0, max: 24 },
-        endTime: { type: Number, min: 0, max: 24 },
-      },
-    ],
+    date: { type: String },
+    startTime: { type: Number, min: 0, max: 24 },
+    endTime: { type: Number, min: 0, max: 24 },
+
     amount: { type: String },
   },
   { timestamps: true }
