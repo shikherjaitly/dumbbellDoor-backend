@@ -2,7 +2,7 @@
 //add an admin route that lists all users with
 //todo imporve the logout code
 //todo create a middleware to run before everycode
-//todo 
+//todo
 
 import emailValidator from "deep-email-validator";
 import dotenv from "dotenv";
@@ -50,7 +50,7 @@ const signup = async (req, res) => {
     }
 
     const user = role === "customer" ? Customer : Trainer;
-    await user.create({ email, password, profileStatus: "incomplete"});
+    await user.create({ email, password, profileStatus: "incomplete" });
     return responseHandler(res, 200, "Signup successful!");
   } catch (error) {
     return errorHandler(res, 400, "An error occurred: " + error);
@@ -113,7 +113,7 @@ const login = async (req, res) => {
         "You're already logged in, kindly continue with the session!"
       );
     }
- 
+
     // Check if user exists in Trainer collection
     let user = await Trainer.findOne({ email });
     let role = "Trainer"; // Assuming Trainer as default role
