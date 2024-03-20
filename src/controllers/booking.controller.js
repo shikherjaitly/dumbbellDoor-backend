@@ -205,31 +205,7 @@ const updateBookingStatus = async (req, res) => {
   }
 };
 
-const getBookingsByUser = async (req, res) => {
-  // try {
-  //   let userType;
-  //   let userEmail;
-
-  //   // Determine user type based on the presence of cookies
-  //   if (req.cookies.customerEmail) {
-  //     userType = "customer";
-  //     userEmail = req.cookies.customerEmail;
-  //   } else if (req.cookies.trainerEmail) {
-  //     userType = "trainer";
-  //     userEmail = req.cookies.trainerEmail;
-  //   } else {
-  //     return res.status(400).json({ message: "User type not recognized." });
-  //   }
-
-  //   // Fetch bookings based on user type and email
-  //   const bookings = await Booking.find({
-  //     [`${userType}Email`]: userEmail,
-  //   });
-
-  //   res.json(bookings);
-  // } catch (error) {
-  //   res.status(500).json({ message: error.message });
-  // }
+const getCustomerBookings = async (req, res) => {
   try {
     const { email } = req.params;
 
@@ -242,9 +218,24 @@ const getBookingsByUser = async (req, res) => {
       customerEmail: email,
     });
 
-    //req.cookies.accessToken;
-    //const token = jwt.decode(accessToken);
-    //token.email = userEmail;
+    return responseHandler(res, 200, bookings);
+  } catch (error) {
+    return errorHandler(res, 500, error.message);
+  }
+};
+
+const getTrainerBookings = async (req, res) => {
+  try {
+    const { email } = req.params;
+
+    if (!email) {
+      return errorHandler(res, 400, "User email is required.");
+    }
+
+    // Fetch bookings based on user type and email
+    const bookings = await Booking.find({
+      trainerEmail: email,
+    });
 
     return responseHandler(res, 200, bookings);
   } catch (error) {
@@ -256,5 +247,6 @@ export {
   sendBookingDetails,
   updateBookingDetails,
   updateBookingStatus,
-  getBookingsByUser,
+  getCustomerBookings,
+  getTrainerBookings,
 };
