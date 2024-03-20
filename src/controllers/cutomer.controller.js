@@ -68,7 +68,7 @@ const buildCustomerProfile = async (req, res) => {
         language,
         // fitnessGoals,
         bodyFat,
-        profileStatus: "pending",
+        profileStatus: "complete",
       }
     ).then(() => {
       return responseHandler(res, 200, "Profile completed!");
