@@ -63,6 +63,7 @@ const buildTrainerProfile = async (req, res) => {
         profilePicture: profilePicturePath,
         description,
         yearsOfExperience,
+        rating:5,
         certifications,
         specializations,
         typesOfServices,

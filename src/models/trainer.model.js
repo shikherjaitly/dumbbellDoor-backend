@@ -12,6 +12,7 @@ const trainerSchema = new mongoose.Schema(
     profilePicture: { type: String },
     description: { type: String },
     yearsOfExperience: { type: String },
+    rating: { type: Number },
     certifications: [{ type: String }],
     specializations: [{ type: String }],
     typesOfServices: [{ type: String }],
