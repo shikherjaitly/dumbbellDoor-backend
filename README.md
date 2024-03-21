@@ -1,7 +1,5 @@
 # DumbbellDoor-backend
 
-# DumbbellDoor-backend
-
 
 [Visit Dumbbelldoor Website ](https://dumbbelldoor.netlify.app/)
 
