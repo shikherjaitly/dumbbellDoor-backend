@@ -6,6 +6,7 @@ const bookingSchema = new mongoose.Schema(
     customerId: { type: String },
     trainerId: { type: String },
     customerEmail: { type: String },
+    customerName: { type: String },
     trainerEmail: { type: String },
     trainerName: { type: String },
     workoutType: { type: String },
